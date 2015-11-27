@@ -38,7 +38,8 @@ import re
 #print decimal.search("not a decimal at all 3.22 3.23").group(0)
 			
 #currently only lacking adaptation for names like O'Malley
-name = re.compile(r"""
+def FindName(text):
+    return re.compile(r"""
 					(											# First name:
 					(?:[A-Z']									# starts with capital letter
 					([a-z][-|A-Z][a-z]|[a-z]'|[a-z])+[ ])		# followed by capitals or dashes surrounded by lowercase letters OR apostrophes following a lowercase letter OR just lowercase letters
@@ -58,7 +59,7 @@ name = re.compile(r"""
 					|					
 					(?:[A-Z]\.)   		
 					)	
-					""", re.X)				
+					""", re.X).search(text)				
 
 #nameresult1 = name.search("Thomas Edison a name not an Arthur C. Clarcke ")
 #if nameresult1: print nameresult1.group(0)

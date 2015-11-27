@@ -1,11 +1,21 @@
-import google, urllib2, bs4, re
+import urllib2
+from urllib2 import urlopen, Request
+from urllib import urlencode
+from bs4 import BeautifulSoup
+import json, regex, search
 
-def WhereSearch(query):
-    results = google.search(query, num = 3, start = 0, stop = 10)
-    
-    resultList = []
-    for result in results:
-        url = urllib2.request.urlopen(result)
-        page = url.read()
-        soup = bs4.BeautifulSoup(page, 'html.parser')
-    print soup.title
+
+
+
+def WhoSearch(query):
+    hits = search.urls(query)
+    request = Request(hits[0]['url'])
+    page = urlopen(request).read()
+    soup = BeautifulSoup(page, 'html.parser')
+    nameresult = regex.FindName(soup.get_text().encode("utf8"))
+    if nameresult:
+        print nameresult.group(0)
+    else:
+        print 'No result'
+
+WhoSearch("Who played spiderman")

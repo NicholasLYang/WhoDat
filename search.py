@@ -21,16 +21,9 @@ def urls(userquery):
     data = results['responseData']
     #print 'Total results: %s' % data['cursor']['estimatedResultCount']
     hits = data['results']
-    #print 'Top %d hits:' % len(hits)
-    #for h in hits: print ' ', h['url']
-    #print 'For more results, see %s' % data['cursor']['moreResultsUrl']
-    if hits:
-        request = Request(hits[0]['url'])
-        page = urlopen(request).read()
-        soup = BeautifulSoup(page, 'html.parser')
-        #soup.get_text().encode("utf8")
-        nameresult = regex.name.search(soup.get_text().encode("utf8"))
-        if nameresult:
-            print nameresult.group(0)
-		
-urls('Who played Spiderman?')
+    '''
+    print 'Top %d hits:' % len(hits)
+    for h in hits: print ' ', h['url']
+    print 'For more results, see %s' % data['cursor']['moreResultsUrl']
+    '''
+    return hits	
