@@ -59,19 +59,26 @@ def FindName(text):
 					|					
 					(?:[A-Z]\.)   		
 					)	
-					""", re.X).search(text)				
-
+                      """, re.X).search(text)
 #nameresult1 = name.search("Thomas Edison a name not an Arthur C. Clarcke ")
 #if nameresult1: print nameresult1.group(0)
 #nameresult2 = name.search("This is a normal sentence without any names.")
 #if nameresult2: print nameresult2.group(0)
 #nameresult3 = name.search("This is a normal sentence with a really weird name: McAnd're van 'tala D. C. AnneMarie.")
 #if nameresult3: print nameresult3.group(0)
+def FindAmericanExtendedDate():
+    result =  re.findall(r"(January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{1,2}(,)?(st)?(th)? (?=[0-9]{4})[0-9]{4}", text, re.MULTILINE)
+    print result
+
+def FindAmericanCondensedDate(text):
+    result = re.findall(r"[0-9]{2}\/[1-3][0-9]\/[0-9]{2}", text, re.MULTILINE)
+    
+
+# Adapted from StackOverFlow response by Unihedron
+# http://stackoverflow.com/questions/24656131/regex-for-existence-of-some-words-whose-order-doesnt-matter
 #
-#
-#
-#
-#
+# 
+# [0-9]{2}\/[1-3][0-9]\/[0-9]{2}
 #
 #
 #
