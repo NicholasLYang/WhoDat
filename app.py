@@ -6,12 +6,18 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        #print request.form['query'][:3].lower() == "who"
+        print request.form['query'][:3].lower()
         if request.form['query'][:3].lower() == "who":
             return render_template(
             'results.html',
             answer = WhoSearch(request.form['query']),
             questionstem = request.form['query'][3:-1]
+            )
+        if request.form['query'][:4].lower() =="when":
+            return render_template(
+            'results.html',
+            answer = WhenSearch(request.form['query']),
+            questionstem = " "
             )
     return render_template('home.html')
 

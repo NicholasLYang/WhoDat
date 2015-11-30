@@ -1,5 +1,7 @@
 
 import urllib2, bs4, re, search, regex, os
+from urllib2 import Request, urlopen
+from bs4 import BeautifulSoup
 
 
 def WhereSearch(query):
@@ -64,16 +66,15 @@ def WhoSearch(query):
 
 def WhenSearch(query):
     # Finds name of person (if applicable) in query
-    name = regex.FindName(query)
-    print "Name: " + name
+    nameInQuery = regex.name.search(query).group(0)
     hits = search.urls(query)
     for hit in hits:
         print hit['titleNoFormatting']
         request = Request(hit['url'])
         page = urlopen(request).read()
         soup = BeautifulSoup(page, 'html.parser')
-        print regex.FindName(hit['titleNoFormatting'])
-        if (regex.FindName(hit['titleNoFormatting']) == name):
+        nameInTitle = regex.name.search(hit['titleNoFormatting']).group(0)
+        if (nameInTitle == nameInQuery):
             print "found it"
     # Saving the output of beautiful soup for debugging
     file = open('SoupOutput', 'w')
@@ -93,7 +94,8 @@ def WhenSearch(query):
         dates.append(regex.FindAmericanCondensedDate(searchText))
         dates.append(regex.FindEuropeanExtendedDate(searchText))
     dates = filter(None, dates)
-    print dates
+    print dates[0]   
+    return dates[0]
 
 def WhySearch(query):
     return "Why not?"
