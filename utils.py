@@ -20,19 +20,27 @@ def WhoSearch(query):
         print 'No result'
 
 def WhenSearch(query):
+    # Finds name of person (if applicable) in query
+    name = regex.FindName(query)
+     print "Name: " + name
     hits = search.urls(query)
-    request = Request(hits[1]['url'])
-    page = urlopen(request).read()
-    soup = BeautifulSoup(page, 'html.parser')
+    for hit in hits:
+        print hit['titleNoFormatting']
+        request = Request(hit['url'])
+        page = urlopen(request).read()
+        soup = BeautifulSoup(page, 'html.parser')
+        print regex.FindName(hit['titleNoFormatting'])
+        if (regex.FindName(hit['titleNoFormatting']) == name):
+            print "found it"
+    # Saving the output of beautiful soup for debugging
     file = open('SoupOutput', 'w')
     file.write(soup.get_text().encode("utf8"))
     # Basically finds action word in query (born, die, etc.)
     action = regex.FindActionInQuery(query)
-    # print soup.get_text().encode('utf8')
     # Then from there finds key words related to action word, i.e. born -> birth, birthday, etc.
     keyWords = regex.FindKeyWords(action)
-    print "Key Words"
-    print keyWords
+    
+
     searchRange = regex.FindSearchRange(keyWords, soup.get_text().encode("utf8"))
     searchRange = searchRange + regex.FindParentheses(soup.get_text().encode("utf8"))
     dates = []
@@ -43,4 +51,6 @@ def WhenSearch(query):
         dates.append(regex.FindEuropeanExtendedDate(searchText))
     dates = filter(None, dates)
     print dates
-    
+
+def WhySearch(query):
+    return "Why not?"

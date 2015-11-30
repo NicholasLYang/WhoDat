@@ -59,7 +59,7 @@ def FindName(text):
 					|					
 					(?:[A-Z]\.)   		
 					)	
-                      """, re.X).search(text)
+                      """, re.X).search(text).group(0)
 #nameresult1 = name.search("Thomas Edison a name not an Arthur C. Clarcke ")
 #if nameresult1: print nameresult1.group(0)
 #nameresult2 = name.search("This is a normal sentence without any names.")
