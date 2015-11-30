@@ -10,7 +10,7 @@ import re
 #		It starts with a capital letter
 #		If abbreviated as an initial, it only has two characters, the second being a period. (ex. J. K. Rowling)
 #		Otherwise, it followed by one or more letters or certain grammatical marks (ex. "-", "'", in "This-Name Containsadashforsomereason, Eli'kai)
-#			Generally, a name will not contain more than one dash. Some names may contain more than one apostrophe. (ex. Ku'oko'a)
+#			Generally, first names will not contain dashes. Some names may contain more than one apostrophe. (ex. Ku'oko'a)
 #			Names may NOT start or end with dashes. (That is, every dash must exist between two letters.)
 #			In rarer cases, names may start or end with apostrophes 
 #				ex. `Auli`i, Andre'
@@ -25,7 +25,7 @@ import re
 #		Otherwise, the same rules apply as for first names.
 #
 #	Last names:
-#		Same rules as for first names.
+#		Same rules as for first names, except that they may contain dashes.
 #
 #Converted to Regex:
 
@@ -40,21 +40,23 @@ import re
 #currently only lacking adaptation for names like O'Malley
 name = re.compile(r"""
 					(											# First name:
-					(?:[A-Z']									# starts with capital letter
-					([a-z][-|A-Z][a-z]|[a-z]'|[a-z])+[ ])		# followed by capitals or dashes surrounded by lowercase letters OR apostrophes following a lowercase letter OR just lowercase letters
+					(?:(Mc|O'|de|De|[A-Z])						# starts with capital letter (or special start Mc O' De de etc.)
+					([a-z]'|[a-z])+[ ])							# followed dashes surrounded by lowercase letters OR apostrophes following a lowercase letter OR just lowercase letters
 					|											# or
 					(?:[A-Z]\.[ ])   							# is just an initial
 					)
 					(											# Middle name(s): (optional)
-					(?:[A-Za-z']								# Same as above, except it can start with uppercase letter
-					([a-z][-|A-Z][a-z]|[a-z]'|[a-z])+[ ])		
+					(?:(van|der|de|De))
+					|
+					(?:([a-z]'|[A-Z])							# Same as above, except it can start with lowercase letter
+					([a-z][-][A-Z]|[a-z]'|[a-z])+[ ])		
 					|						
 					(?:[A-Z]\.[ ])   		
 					)
 					{0,5}										# Allow for up to five middle names
 					(											# Last name:
-					(?:[A-Z']									# Same as first name
-					([a-z][-|A-Z][a-z]|[a-z]'|[a-z])+)		
+					(?:(Mc|O'|de|De|[A-Z])						# Same as first name
+					([a-z][-][A-Z]|[a-z]'|[a-z])+)				# Do NOT require a space at the end (could end in a period, comma, etc.)
 					|					
 					(?:[A-Z]\.)   		
 					)	
