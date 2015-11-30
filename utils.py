@@ -1,4 +1,6 @@
-import google, urllib2, bs4, re, search, regex, os
+
+import urllib2, bs4, re, search, regex, os
+
 
 def WhereSearch(query):
     results = google.search(query, num = 3, start = 0, stop = 10)
