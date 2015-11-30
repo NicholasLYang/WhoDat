@@ -24,7 +24,9 @@ def WhoSearch(query):
         if nameresult: #if there is a match for a potential "name", let's check to make sure it's actually a name.
             #startind = 0
             print nameresult.group(0) #prints potential match
-            os.chdir(r'C:\Users\Mastermind\WhoDat')
+            abspath = os.path.abspath(__file__)
+            dname = os.path.dirname(abspath)
+            os.chdir(dname)
             words = open('wordsEn.txt', 'r').read()
             names = open('first-names-female.txt', 'r').read() + open('first-names-male.txt', 'r').read()
             name1words = str("\n"+nameresult.group(0).split(" ")[0]+"\n").lower()

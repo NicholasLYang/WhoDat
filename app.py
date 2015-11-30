@@ -10,7 +10,8 @@ def index():
         if request.form['query'][:3].lower() == "who":
             return render_template(
             'results.html',
-            answer = WhoSearch(request.form['query'])
+            answer = WhoSearch(request.form['query']),
+            questionstem = request.form['query'][3:-1]
             )
     return render_template('home.html')
 
