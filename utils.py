@@ -1,4 +1,4 @@
-import google, urllib2, bs4, re, search, regex
+import urllib2, bs4, re, search, regex
 
 def WhereSearch(query):
     results = google.search(query, num = 3, start = 0, stop = 10)
@@ -61,7 +61,7 @@ def WhoSearch(query):
 def WhenSearch(query):
     # Finds name of person (if applicable) in query
     name = regex.FindName(query)
-     print "Name: " + name
+    print "Name: " + name
     hits = search.urls(query)
     for hit in hits:
         print hit['titleNoFormatting']
