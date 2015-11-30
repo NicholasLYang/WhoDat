@@ -100,7 +100,10 @@ def FindSearchRange(actions, text):
 # Finds action word in query. 
 def FindActionInQuery(query):
     result = re.compile(r"born|died|graduated|elected|die").search(query)
-    return result.group(0)
+    if (result == None):
+        return ""
+    else:
+        return result.group(0)
 
 # Takes an action word and generates related words. Ideally I'd use a thesaurus and have this adapt to search queries, but that's too much work
 def FindKeyWords(action):

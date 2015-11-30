@@ -11,13 +11,19 @@ def index():
             return render_template(
             'results.html',
             answer = WhoSearch(request.form['query']),
-            questionstem = request.form['query'][3:-1]
+            questionstem = request.form['query'][3:-1]+"."
+            )
+        if request.form['query'][:3].lower() == "why":
+            return render_template(
+            'results.html',
+            answer = WhySearch(request.form['query']),
+            questionstem = " "
             )
         if request.form['query'][:4].lower() =="when":
             return render_template(
             'results.html',
             answer = WhenSearch(request.form['query']),
-            questionstem = " "
+            questionstem = "."
             )
     return render_template('home.html')
 

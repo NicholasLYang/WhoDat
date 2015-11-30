@@ -66,16 +66,30 @@ def WhoSearch(query):
 
 def WhenSearch(query):
     # Finds name of person (if applicable) in query
-    nameInQuery = regex.name.search(query).group(0)
-    hits = search.urls(query)
-    for hit in hits:
-        print hit['titleNoFormatting']
-        request = Request(hit['url'])
+    potentialname = regex.name.search(query)
+    if potentialname: 
+        nameInQuery = potentialname.group(0)
+        hits = search.urls(query)
+        for hit in hits:
+            print hit['titleNoFormatting']
+            request = Request(hit['url'])
+            page = urlopen(request).read()
+            soup = BeautifulSoup(page, 'html.parser')
+            potentialnameInTitle = regex.name.search(hit['titleNoFormatting'])
+            if potentialnameInTitle: 
+                nameInTitle = potentialnameInTitle.group(0)
+                if (nameInTitle == nameInQuery):
+                    print "found it"
+            else:
+                hits = search.urls(query)
+                request = Request(hits[0]['url'])
+                page = urlopen(request).read()
+                soup = BeautifulSoup(page, 'html.parser')
+    else:
+        hits = search.urls(query)
+        request = Request(hits[0]['url'])
         page = urlopen(request).read()
         soup = BeautifulSoup(page, 'html.parser')
-        nameInTitle = regex.name.search(hit['titleNoFormatting']).group(0)
-        if (nameInTitle == nameInQuery):
-            print "found it"
     # Saving the output of beautiful soup for debugging
     file = open('SoupOutput', 'w')
     file.write(soup.get_text().encode("utf8"))
@@ -83,8 +97,6 @@ def WhenSearch(query):
     action = regex.FindActionInQuery(query)
     # Then from there finds key words related to action word, i.e. born -> birth, birthday, etc.
     keyWords = regex.FindKeyWords(action)
-    
-
     searchRange = regex.FindSearchRange(keyWords, soup.get_text().encode("utf8"))
     searchRange = searchRange + regex.FindParentheses(soup.get_text().encode("utf8"))
     dates = []
@@ -94,8 +106,11 @@ def WhenSearch(query):
         dates.append(regex.FindAmericanCondensedDate(searchText))
         dates.append(regex.FindEuropeanExtendedDate(searchText))
     dates = filter(None, dates)
-    print dates[0]   
-    return dates[0]
+    if dates:
+        print dates[0]
+        return dates[0]
+    else:
+        return "Error: Answer not found"
 
 def WhySearch(query):
     return "Why not?"
