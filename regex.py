@@ -68,17 +68,52 @@ name = re.compile(r"""
 #if nameresult2: print nameresult2.group(0)
 #nameresult3 = name.search("This is a normal sentence with a really weird name: McAnd're van 'tala D. C. AnneMarie.")
 #if nameresult3: print nameresult3.group(0)
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
+def FindAmericanExtendedDate(text):
+    result =  re.compile(r"(January|February|March|April|May|June|July|August|September|October|November|December) [0-9]{1,2}(,)?(st)?(th)? (?=[0-9]{4})[0-9]{4}").search(text)
+    if (result == None):
+        return ""
+    else:
+        return result.group(0)
+
+def FindAmericanCondensedDate(text):
+    result = re.compile(r"[0-9]{2}\/[1-3][0-9]\/[0-9]{2}").search(text)
+    if (result == None):
+        return ""
+    else:
+        return result.group(0)
+def FindEuropeanExtendedDate(text):
+    result =  re.compile(r"[0-9]{1,2}(,)?(st)?(th)? (January|February|March|April|May|June|July|August|September|October|November|December) (?=[0-9]{4})[0-9]{4}").search(text)
+    if (result == None):
+        return ""
+    else:
+        return result.group(0)
+
+# Given an action word (born, died, graduated, etc.) finds the next 20 characters after word 
+def FindSearchRange(actions, text):
+    out = []
+    for action in actions:
+        regex = "(?<=" + action + ").{0,40}"
+        regex.encode('string-escape')
+        out = out + re.findall(regex, text, re.DOTALL)
+    return out
+
+# Finds action word in query. 
+def FindActionInQuery(query):
+    result = re.compile(r"born|died|graduated|elected|die").search(query)
+    return result.group(0)
+
+# Takes an action word and generates related words. Ideally I'd use a thesaurus and have this adapt to search queries, but that's too much work
+def FindKeyWords(action):
+    keyWords = { 'born':['born', 'birth', 'birthday'], 'die':['die', 'Died', 'death', 'passed away', 'born'], 'elected':['elected', 'president', 'election', 'won', 'elect'], 'graduated':['graduated', 'graduate', 'school', 'college', 'university']}
+    if action in keyWords:
+        return keyWords[action]
+    else:
+        return [action]
+
+# Often dates are in parentheses 
+def FindParentheses(text):
+    result = re.findall(r"\(.{40}", text)
+    return result
 #
 #
 #

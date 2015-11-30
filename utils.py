@@ -11,8 +11,11 @@ def WhereSearch(query):
     print soup.title
 	
 def WhoSearch(query):
-    results = search.urls(query)
-    if results:
+    hits = search.urls(query)
+    if hits:
+        results = []
+        for i in hits:
+            results.append(i['url'])
         #results is now a list containing URLs for the top (usually 4) Google search results for the Who query.
         page = urllib2.urlopen(results[0]).read() #may later add code to read other URLs as well
         soup = bs4.BeautifulSoup(page, 'html.parser') #BeautifulSoup parsing of URL of first Google result
@@ -55,6 +58,42 @@ def WhoSearch(query):
     #for i in results:
     #    print i
 
+def WhenSearch(query):
+    # Finds name of person (if applicable) in query
+    name = regex.FindName(query)
+     print "Name: " + name
+    hits = search.urls(query)
+    for hit in hits:
+        print hit['titleNoFormatting']
+        request = Request(hit['url'])
+        page = urlopen(request).read()
+        soup = BeautifulSoup(page, 'html.parser')
+        print regex.FindName(hit['titleNoFormatting'])
+        if (regex.FindName(hit['titleNoFormatting']) == name):
+            print "found it"
+    # Saving the output of beautiful soup for debugging
+    file = open('SoupOutput', 'w')
+    file.write(soup.get_text().encode("utf8"))
+    # Basically finds action word in query (born, die, etc.)
+    action = regex.FindActionInQuery(query)
+    # Then from there finds key words related to action word, i.e. born -> birth, birthday, etc.
+    keyWords = regex.FindKeyWords(action)
+    
+
+    searchRange = regex.FindSearchRange(keyWords, soup.get_text().encode("utf8"))
+    searchRange = searchRange + regex.FindParentheses(soup.get_text().encode("utf8"))
+    dates = []
+    for searchText in searchRange:
+        print searchText
+        dates.append(regex.FindAmericanExtendedDate(searchText))
+        dates.append(regex.FindAmericanCondensedDate(searchText))
+        dates.append(regex.FindEuropeanExtendedDate(searchText))
+    dates = filter(None, dates)
+    print dates
+
+def WhySearch(query):
+    return "Why not?"
+	
 while(True):
     userinput = raw_input('What would you like to search for? ')
     WhoSearch(str(userinput))
