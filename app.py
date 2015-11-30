@@ -1,15 +1,18 @@
-from flask import Flask, render_template, request, session, redirect, url_for
-import user
-import urllib2, json
-import utils
+from flask import Flask, render_template, request
+from utils import WhereSearch, WhoSearch, WhenSearch, WhySearch
 
 app = Flask(__name__)
 
-@app.route('/')
-@app.route('/home')
-def home():
-    return render_template("Home.html")
-
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        #print request.form['query'][:3].lower() == "who"
+        if request.form['query'][:3].lower() == "who":
+            return render_template(
+            'results.html',
+            answer = WhoSearch(request.form['query'])
+            )
+    return render_template('home.html')
 
 
 if __name__ == "__main__":
